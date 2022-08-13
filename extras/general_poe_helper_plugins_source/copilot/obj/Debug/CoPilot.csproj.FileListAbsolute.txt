@@ -1,0 +1,5 @@
+C:\PoeHelper\Plugins\Compiled\CoPilot\CoPilot.dll.config
+C:\PoeHelper\Plugins\Compiled\CoPilot\CoPilot.dll
+C:\Users\PoeHelper\Plugins\Compiled\CoPilot\cimgui.dll
+C:\Users\PoeHelper\Plugins\Compiled\CoPilot\CoPilot.dll.config
+C:\Users\PoeHelper\Plugins\Compiled\CoPilot\CoPilot.dll

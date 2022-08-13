@@ -1,0 +1,6 @@
+C:\Users\PoeHelper\Plugins\Compiled\PreloadAlert\config\preload_alerts_default.txt
+C:\Users\PoeHelper\Plugins\Compiled\PreloadAlert\config\preload_alerts_personal.txt
+C:\Users\PoeHelper\Plugins\Compiled\PreloadAlert\cimgui.dll
+C:\Users\PoeHelper\Plugins\Compiled\PreloadAlert\PreloadAlert.dll.config
+C:\Users\PoeHelper\Plugins\Compiled\PreloadAlert\PreloadAlert.dll
+C:\Users\PoeHelper\Plugins\Compiled\PreloadAlert\PreloadAlert.pdb
