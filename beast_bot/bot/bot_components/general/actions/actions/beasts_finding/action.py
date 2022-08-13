@@ -108,7 +108,6 @@ class BeastsFindingAction(AbstractAction):
         )
         self._stash_scanner = TemplateScanner(
             BEAST_BOT_COMPILED_TEMPLATES.nametags_templates.get('stash'),
-            BEAST_BOT_COMPILED_TEMPLATES.other_templates.get('stash_label'),
             threshold=0.9
         )
         self._unloaded_stash_scanner = TemplateScanner(
@@ -173,7 +172,7 @@ class BeastsFindingAction(AbstractAction):
         while True:
             if coord := self._stash_scanner.indentify_by_first():
                 CommonIOController.move_and_click(coord)
-                time.sleep(0.3)
+                time.sleep(0.5)
 
             if (
                 self._unloaded_stash_scanner.get_condition_by_one() is True
@@ -436,9 +435,10 @@ class BeastsFindingAction(AbstractAction):
         if self._check_map_content() is True:
             if settings.IS_PARTY_MEMBER is False and EXTENDED_MODE is True:
                 self._wait_until_party_is_accepted()
-                self.is_party_accepted = False
 
             yield ControlAction.ActionType
 
         if not self._in_hideout():
             self._comeback_into_ho()
+
+        self.is_party_accepted = False
