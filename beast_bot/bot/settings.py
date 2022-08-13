@@ -58,6 +58,9 @@ class Settings(BaseSettings):
     # SHARE DATA HUD PLUGIN SHOULD BE TURNED ON
     SHARE_DATA_PORTAL_VALIDATOR: bool = True
 
+    # When True your bot can unlock party accept loop when get "WORKING" status
+    PARTY_ACCEPT_LOCK: bool = False
+
     LINKING_SERVER = LinkingServerSettings()
     LOGGING = LoggingSettings()
     BOT_SERVER = BotServerSettings()
