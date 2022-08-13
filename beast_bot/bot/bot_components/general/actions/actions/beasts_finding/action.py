@@ -329,6 +329,11 @@ class BeastsFindingAction(AbstractAction):
     def _wait_until_party_is_accepted(self) -> None:
         while True:
             for action in ACTIONS[PARTY_ACCEPT_ACTION].action.execute_action():
+                if self.bot_data_adapter.status in (
+                    MachineStatus.WORKING
+                ):
+                    return
+
                 if action is ControlAction.DONE:
                     RequestsController.execute(
                         Service.LINKING_SERVER,
