@@ -330,7 +330,7 @@ class BeastsFindingAction(AbstractAction):
         while True:
             for action in ACTIONS[PARTY_ACCEPT_ACTION].action.execute_action():
                 if self.bot_data_adapter.status in (
-                    MachineStatus.WORKING
+                    MachineStatus.WORKING,
                 ):
                     return
 
