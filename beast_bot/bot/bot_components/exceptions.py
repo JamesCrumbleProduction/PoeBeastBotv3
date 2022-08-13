@@ -1,0 +1,6 @@
+class BotMainActionError(BaseException):
+    ...
+
+
+class UnavailableCaller(BaseException):
+    ...

@@ -1,0 +1,35 @@
+# CRITICAL BUGS
+
+   - FOUNDER but click on portal after - DONE
+   - When bot has PAUSING status then it can't be overrided to one of the founder statuses - DONE
+
+   - Fix segmentation fault in monitoring panel (memory safe threads calls, signals and emits) - DONE
+
+# Second wave todos
+   
+   - Add comfortable way to extend maps and scarabs windows - DONE
+
+   # HIGH PRIORITY (EXTENDED_NETWORK_MODE)
+   - update BeastsFinding action for EXTENDED_NETWORK_MODE - (Seems) DONE
+   - Find glad solution how to call action about founder within EXTENDED_NETWORK_MODE to all of party members (update to founder hideout action mb) - DONE
+   - add auto party accept and await for worker in extended mode - DONE
+   - auto enter idle members to founder and exit too - DONE
+   - init buttons for monitoring panel - DONE
+   - create logic for monitoring panel - DONE
+
+   - Add beasts packing action - CANCELED
+   - add TradeBeastiaryOrbs action - CANCELED
+
+   - Add "to founder hideout" action (priority of beasts adding mb) (NON EXTENDED_NETWORK_MODE) - DONE
+   - Fix actions prefetching and set timeout for request in monitoring panel to 1 sec - DONE
+   - Remove founded beast actiontype and change logic of beasts finding action - DONE 
+
+# Third wave todos
+   - add black screen portals validation support - DONE
+   - REFACTOR REQUESTS CONTROLLER in monitoring panel and bot - DONE
+   - Update HUD plugins - DONE
+   
+# End of the project
+- REFACTOR monitoring panel method selectors (make base with appending selectable) - DONE 
+- FEAT: add buttons auto generate (max 6) by grid 3x2 by keys of comboBox
+   

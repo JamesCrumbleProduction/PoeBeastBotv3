@@ -1,0 +1,13 @@
+orjson
+pynput
+pydantic
+httpx
+opencv-python
+Pillow
+fastapi
+uvicorn
+pyyaml
+pywin32
+pynput
+pyperclip
+numpy

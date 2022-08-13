@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="images">
+    <file>Bestiary_Brimmed_Hat_inventory_icon.webp</file>
+    <file>bestiary_background.png</file>
+  </qresource>
+</RCC>

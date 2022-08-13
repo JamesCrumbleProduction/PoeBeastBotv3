@@ -1,0 +1,85 @@
+//FilterName(menu name):	filters		:ParentMenu(optionaly, will be created automatially for grouping)
+//Filter parts should divided by coma or | (for OR operation(any filter part can pass))
+
+////////////	Available properties:	/////////////////////
+/////////	String (name) properties:
+//classname
+//basename
+//path
+/////////	Numerical properties:
+//itemquality
+//rarity
+//ilvl
+//tier
+//numberofsockets
+//numberoflinks
+//veiled
+//fractured
+/////////	Boolean properties:
+//identified
+//fractured
+//corrupted
+//influenced
+//Elder
+//Shaper
+//Crusader
+//Hunter
+//Redeemer
+//Warlord
+//blightedMap
+//elderGuardianMap
+/////////////////////////////////////////////////////////////
+////////////	Available operations:	/////////////////////
+/////////	String (name) operations:
+//!=	(not equal)
+//=		(equal)
+//^		(contains)
+//!^	(not contains)
+/////////	Numerical operations:
+//!=	(not equal)
+//=		(equal)
+//>		(bigger)
+//<		(less)
+//<=	(less or qual)
+//>=	(bigger or qual)
+/////////	Boolean operations:
+//!		(not/invert)
+/////////////////////////////////////////////////////////////
+
+//Default Tabs
+Currency:			ClassName=StackableCurrency,path!^Essence,BaseName!^Remnant,path!^CurrencyDelveCrafting,BaseName!^Splinter,Path!^CurrencyItemisedProphecy,Path!^CurrencyAfflictionOrb,Path!^Mushrune	:Default Tabs
+Divination Cards:			ClassName=DivinationCard					:Default Tabs
+Essences:			BaseName^Essence|BaseName^Remnant,ClassName=StackableCurrency:Default Tabs
+Fragments:			ClassName=MapFragment|BaseName^Splinter,ClassName=StackableCurrency|ClassName=LabyrinthMapItem|BaseName^Scarab	:Default Tabs
+Maps:			ClassName=Map,!blightedMap			:Default Tabs
+Fossils/Resonators:			path^CurrencyDelveCrafting | path^DelveStackableSocketableCurrency	:Default TabsGems:				ClassName^Skill Gem,ItemQuality=0			:Default Tabs
+6-Socket:			numberofsockets=6,numberoflinks!=6			:Default Tabs
+Prophecies:			Path^CurrencyItemisedProphecy			:Default Tabs
+Jewels:				ClassName=Jewel,Rarity != Unique								:Default Tabs
+
+//Special Items
+Veiled:			Veiled>0	:Special items
+AnyInfluence:			influenced	:Special items
+
+//league Content
+Legion-Incubators:			path^CurrencyIncubation	:League Items
+Delirium-Splinter:			path^CurrencyAfflictionShard	:League Items
+Delirium-Simulacrum:			path^CurrencyAfflictionFragment	:League Items
+Blight-AnnointOils:			path^Mushrune	:League Items
+//Chance Items
+Sorcerer Boots:	BaseName=Sorcerer Boots,Rarity=Normal	:Chance Items
+Leather Belt:	BaseName=Leather Belt,Rarity=Normal		:Chance Items
+
+//Vendor Recipes
+Chisel Recipe:		BaseName=Stone Hammer|BaseName=Rock Breaker,ItemQuality=20	:Vendor Recipes
+Quality Gems:		ClassName^Skill Gem,ItemQuality>0							:Vendor Recipes
+Quality Flasks:		ClassName^Flask,ItemQuality>0								:Vendor Recipes
+
+//Chaos Recipe LVL 2 (unindentified and ilvl 60 or above)
+Weapons:		!identified,Rarity=Rare,ilvl>=60,ClassName^Two Hand|ClassName^One Hand|ClassName=Bow|ClassName=Staff|ClassName=Sceptre|ClassName=Wand|ClassName=Dagger|ClassName=Claw|ClassName=Shield :Chaos Recipe
+Jewelry:		!identified,Rarity=Rare,ilvl>=60,ClassName=Ring|ClassName=Amulet 	:Chaos Recipe
+Belts:			!identified,Rarity=Rare,ilvl>=60,ClassName=Belt 					:Chaos Recipe
+Helms:			!identified,Rarity=Rare,ilvl>=60,ClassName=Helmet 					:Chaos Recipe
+Body Armours:	!identified,Rarity=Rare,ilvl>=60,ClassName=Body Armour 				:Chaos Recipe
+Boots:			!identified,Rarity=Rare,ilvl>=60,ClassName=Boots 					:Chaos Recipe
+Gloves:			!identified,Rarity=Rare,ilvl>=60,ClassName=Gloves 					:Chaos Recipe

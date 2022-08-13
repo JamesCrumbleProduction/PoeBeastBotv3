@@ -1,0 +1,7 @@
+pyside6-rcc "resources file filename.qrc" > "resources file filename_rc.py" <- convert data file into python module
+
+pyside6-rcc resources.qrc > resources_rc.py
+pyside6-uic design.ui > design.py
+
+
+execute compile_script.py then delete "import resources_rc" from design.py and make sure your path of files in this file are valided
