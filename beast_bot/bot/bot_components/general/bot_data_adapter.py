@@ -37,8 +37,8 @@ class BotDataAdapter:
             and self._bot_instance.current_status in BEASTS_STATUSES.values()
             and getattr(
                 self._bot_instance._main_action.action,
-                'is_party_accepted', False
-            ) is True
+                'is_party_accepted', True
+            ) is False
         ):
             return
 
