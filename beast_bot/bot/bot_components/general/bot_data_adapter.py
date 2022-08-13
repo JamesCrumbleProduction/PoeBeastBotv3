@@ -33,7 +33,7 @@ class BotDataAdapter:
 
     def update_status(self, status: MachineStatus) -> None:
         if (
-            not settings.PARTY_ACCEPT_LOCK
+            settings.PARTY_ACCEPT_LOCK
             and self._bot_instance.current_status in BEASTS_STATUSES.values()
         ):
             return
