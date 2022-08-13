@@ -1,7 +1,8 @@
 from typing import Any
 
 from .structure import ActionMeta
-from .panel_data import MachineStatus
+from .panel_data import MachineStatus, BEASTS_STATUSES
+from ...settings import settings
 from ...bot_components import bot
 from ...server.components.from_hud.structure import LocationContent, CurrentLocation
 
@@ -31,6 +32,12 @@ class BotDataAdapter:
         return self._bot_instance.get_and_pop_action()
 
     def update_status(self, status: MachineStatus) -> None:
+        if (
+            not settings.PARTY_ACCEPT_LOCK
+            and self._bot_instance.current_status in BEASTS_STATUSES.values()
+        ):
+            return
+
         self._bot_instance.current_status = status
 
     def update_content(self, content: LocationContent) -> None:
