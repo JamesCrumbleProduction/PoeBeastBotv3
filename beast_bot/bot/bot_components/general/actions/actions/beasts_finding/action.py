@@ -108,6 +108,7 @@ class BeastsFindingAction(AbstractAction):
         )
         self._stash_scanner = TemplateScanner(
             BEAST_BOT_COMPILED_TEMPLATES.nametags_templates.get('stash'),
+            BEAST_BOT_COMPILED_TEMPLATES.other_templates.get('stash_label'),
             threshold=0.9
         )
         self._unloaded_stash_scanner = TemplateScanner(
@@ -168,17 +169,31 @@ class BeastsFindingAction(AbstractAction):
         if tab_meta := self._tabs_coordinates.get(tab):
             tab_meta.tab_content = list(scanner.iterate_all_by_each_founded())
 
+    # def _enter_to_stash(self) -> None:
+    #     while True:
+    #         if coord := self._stash_scanner.indentify_by_first():
+    #             CommonIOController.move_and_click(coord)
+    #             time.sleep(0.5)
+
+    #         if (
+    #             self._unloaded_stash_scanner.get_condition_by_one() is True
+    #             or self._scarabs_scanner.get_condition_by_one() is True
+    #             or self._maps_scanner.get_condition_by_one() is True
+    #         ):
+    #             break
+
+    #         time.sleep(action_settings.ENTER_TO_INTERVAL)
+
     def _enter_to_stash(self) -> None:
         while True:
-            if coord := self._stash_scanner.indentify_by_first():
-                CommonIOController.move_and_click(coord)
-                time.sleep(0.5)
+            iterator = self._stash_scanner.iterate_all_by_first_founded()
 
-            if (
-                self._unloaded_stash_scanner.get_condition_by_one() is True
-                or self._scarabs_scanner.get_condition_by_one() is True
-                or self._maps_scanner.get_condition_by_one() is True
-            ):
+            if map_device_name_tag_coord := next(iterator):
+                CommonIOController.move_and_click(map_device_name_tag_coord)
+                time.sleep(0.3)
+                self._stash_scanner.update_source()
+
+            if next(iterator) is not None:
                 break
 
             time.sleep(action_settings.ENTER_TO_INTERVAL)
