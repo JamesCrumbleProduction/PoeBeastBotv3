@@ -342,7 +342,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QToolButton" name="renderButton">
    <property name="geometry">
     <rect>
-     <x>340</x>
+     <x>320</x>
      <y>250</y>
      <width>31</width>
      <height>31</height>
@@ -355,7 +355,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QToolButton" name="renderButton_2">
    <property name="geometry">
     <rect>
-     <x>390</x>
+     <x>380</x>
      <y>250</y>
      <width>31</width>
      <height>31</height>
@@ -381,7 +381,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QToolButton" name="renderButton_4">
    <property name="geometry">
     <rect>
-     <x>490</x>
+     <x>500</x>
      <y>250</y>
      <width>31</width>
      <height>31</height>
@@ -394,8 +394,8 @@ p, li { white-space: pre-wrap; }
   <widget class="QToolButton" name="renderButton_5">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>300</y>
+     <x>320</x>
+     <y>310</y>
      <width>31</width>
      <height>31</height>
     </rect>
@@ -407,8 +407,8 @@ p, li { white-space: pre-wrap; }
   <widget class="QToolButton" name="renderButton_8">
    <property name="geometry">
     <rect>
-     <x>490</x>
-     <y>300</y>
+     <x>500</x>
+     <y>310</y>
      <width>31</width>
      <height>31</height>
     </rect>
@@ -420,8 +420,8 @@ p, li { white-space: pre-wrap; }
   <widget class="QToolButton" name="renderButton_6">
    <property name="geometry">
     <rect>
-     <x>390</x>
-     <y>300</y>
+     <x>380</x>
+     <y>310</y>
      <width>31</width>
      <height>31</height>
     </rect>
@@ -434,7 +434,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>440</x>
-     <y>300</y>
+     <y>310</y>
      <width>31</width>
      <height>31</height>
     </rect>
