@@ -30,4 +30,3 @@ logging.basicConfig(
     level=settings.LOGGING_LEVEL
 )
 PANEL_LOGGER = logging.getLogger('PANEL')
-print(settings.LOGGING_FILENAME)
