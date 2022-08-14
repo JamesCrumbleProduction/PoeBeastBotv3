@@ -169,21 +169,6 @@ class BeastsFindingAction(AbstractAction):
         if tab_meta := self._tabs_coordinates.get(tab):
             tab_meta.tab_content = list(scanner.iterate_all_by_each_founded())
 
-    # def _enter_to_stash(self) -> None:
-    #     while True:
-    #         if coord := self._stash_scanner.indentify_by_first():
-    #             CommonIOController.move_and_click(coord)
-    #             time.sleep(0.5)
-
-    #         if (
-    #             self._unloaded_stash_scanner.get_condition_by_one() is True
-    #             or self._scarabs_scanner.get_condition_by_one() is True
-    #             or self._maps_scanner.get_condition_by_one() is True
-    #         ):
-    #             break
-
-    #         time.sleep(action_settings.ENTER_TO_INTERVAL)
-
     def _enter_to_stash(self) -> None:
         while True:
             iterator = self._stash_scanner.iterate_all_by_first_founded()
