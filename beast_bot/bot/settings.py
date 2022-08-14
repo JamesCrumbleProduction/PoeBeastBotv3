@@ -1,9 +1,19 @@
+import os
 import socket
+import orjson
 import logging
 
 from pydantic import BaseSettings, validator
 
 from .helpers import get_source_fields
+
+
+SAVE_SETTINGS: bool = True
+SAVE_SETTINGS_FILENAME: str = 'saved_settings.json'
+SAVE_SETTINGS_PATH: str = os.path.join(
+    os.path.abspath(os.path.dirname(__file__)),
+    SAVE_SETTINGS_FILENAME
+)
 
 
 class ShareDataServiceSettings(BaseSettings):
@@ -36,7 +46,7 @@ class IOServiceSettings(BaseSettings):
 class LoggingSettings(BaseSettings):
 
     LEVEL: int = logging.DEBUG
-    FILENAME: str = 'logging'
+    FILENAME: str = 'logging.log'
     CLEAR_FILE_SIZE_LIMIT: int = 10  # in megabytes
 
 
@@ -78,5 +88,17 @@ class Settings(BaseSettings):
             'MESSAGE_PLACEHOLDER should have only one "{beast}" placeholder'
         )
 
+    def save_settings(self) -> None:
+        if not SAVE_SETTINGS:
+            return
+
+        with open(SAVE_SETTINGS_PATH, 'w') as handle:
+            handle.write(self.json())
+
 
 settings = Settings()
+
+if SAVE_SETTINGS is True:
+    if os.path.exists(SAVE_SETTINGS_PATH):
+        with open(SAVE_SETTINGS_PATH, 'r') as handle:
+            settings = Settings(**orjson.loads(handle.read()))

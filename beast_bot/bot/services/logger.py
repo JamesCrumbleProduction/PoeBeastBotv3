@@ -9,6 +9,9 @@ LOGGING_FILE_PATH: str = os.path.join(
     ), '..', settings.LOGGING.FILENAME
 )
 
+if not os.path.exists(LOGGING_FILE_PATH):
+    open(LOGGING_FILE_PATH, 'a').close()
+
 if (
     os.path.getsize(LOGGING_FILE_PATH) // (1024 * 1024)
     >= settings.LOGGING.CLEAR_FILE_SIZE_LIMIT

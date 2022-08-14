@@ -43,4 +43,5 @@ if __name__ == '__main__':
     except Exception as exception:
         PANEL_LOGGER.critical(exception, exc_info=True)
     finally:
+        settings.save_settings()
         GUI_SELECTOR.instance.working_status = False

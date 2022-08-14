@@ -41,4 +41,5 @@ if __name__ == '__main__':
         BOT_INSTANCE.data_adapter.update_status(MachineStatus.ERROR)
         BOT_LOGGER.critical(exception, exc_info=True)
     finally:
+        settings.save_settings()
         MAIN_THREAD_WORKING = False
