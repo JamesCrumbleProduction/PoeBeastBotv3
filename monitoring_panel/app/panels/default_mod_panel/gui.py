@@ -47,7 +47,7 @@ class GUI(AbstractGui):
             cls._instance._panel_instance = MonitoringPanel()
             cls._instance._events_initializer = EventsInitializer()
             cls._instance._buttons_initializer = ButtonsInitializer(
-                cls._instance._panel_instance, cls._instance._define_pressed_button
+                cls._instance, cls._instance._panel_instance, cls._instance._define_pressed_button
             )
             cls._instance._server_methods = ThreadSafeServerMethods()
 
@@ -78,11 +78,7 @@ class GUI(AbstractGui):
         return self._server_methods
 
     def __init__(self):
-        self._requests = RequestsController(
-            ThreadPoolExecutor(
-                max_workers=settings.WORKERS
-            )
-        )
+        self._requests = RequestsController()
 
         self._server_methods.add_selectable_machine_signal.connect(
             self._add_selectable_machine
@@ -136,7 +132,7 @@ class GUI(AbstractGui):
         super().init_linking_server_actions(machines_control_router)
         machines_control_router.add_api_route(
             path='/call_worked_to_pausing',
-            endpoint=self.server_methods.call_worked_to_pausing(),
+            endpoint=self.server_methods.call_worked_to_pausing,
             methods=['PATCH'],
             status_code=200
         )

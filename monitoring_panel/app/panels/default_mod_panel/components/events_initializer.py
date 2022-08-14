@@ -36,13 +36,3 @@ class EventsInitializer(AbstractEventsInitializer):
             route=ConnectionRoutes.ControlMachine.execute_action,
             params={'action': 'EnterIntoPortal'}
         )
-        self._events[ControlEvent.PACK_BEASTS] = RequestEvent(
-            prefix=RoutePrefix.CONTROL,
-            route=ConnectionRoutes.ControlMachine.execute_action,
-            params={'action': 'PackBeastsAction'}
-        )
-        self._events[ControlEvent.STOP_PACK_BEASTS] = RequestEvent(
-            prefix=RoutePrefix.CONTROL,
-            route=ConnectionRoutes.ControlMachine.execute_action,
-            params={'action': 'StopPackBeastsAction'}
-        )

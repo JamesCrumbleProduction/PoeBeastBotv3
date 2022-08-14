@@ -1,21 +1,19 @@
 from typing import Callable
 
 from .monitoring_panel import MonitoringPanel
-from ...structure import (
-    ControlEvent,
-    ControlEventButton
-)
-from ...abstract_gui_components import AbstractButtonsInitializer
+from ...structure import ControlEvent
+from ...abstract_gui_components import AbstractButtonsInitializer, AbstractGui
 
 
 class ButtonsInitializer(AbstractButtonsInitializer):
 
     def __init__(
         self,
+        gui_instance: type[AbstractGui],
         panel_instance: MonitoringPanel,
         button_events_connection_method: Callable[[str], None]
     ) -> None:
-        super().__init__(panel_instance, button_events_connection_method)
+        super().__init__(gui_instance, panel_instance, button_events_connection_method)
         self._init_combobox_button_event(panel_instance)
         self._init_switch_button_event(panel_instance)
 
