@@ -113,9 +113,9 @@ class GUI(AbstractGui):
     def _request_to_machine(
         self,
         machine: Machine,
-        event_button: ControlEventButton
+        control_event: ControlEvent
     ) -> None:
-        if request_event := self._events_initializer.get(event_button.event):
+        if request_event := self._events_initializer.get(control_event):
             if machine.status != MachineStatus.ERROR:
                 self._requests.execute(machine, request_event)
 
@@ -123,10 +123,10 @@ class GUI(AbstractGui):
         if event_button := self._buttons_initializer.get(button_name):
             if self._panel_instance.ui.radioButton.isChecked():
                 for machine in self._panel_instance.machines.values():
-                    self._request_to_machine(machine, event_button)
+                    self._request_to_machine(machine, event_button.event)
 
             elif machine := self._panel_instance.get_selected_machine_from_comboBox():
-                self._request_to_machine(machine, event_button)
+                self._request_to_machine(machine, event_button.event)
 
     @property
     def available_machines(self) -> dict[str, Machine]:

@@ -1,36 +1,54 @@
+
 from typing import Callable
 
 from .monitoring_panel import MonitoringPanel
 from ...structure import ControlEvent, EventSide
-from ...abstract_gui_components import AbstractButtonsInitializer
+from ...abstract_gui_components import AbstractButtonsInitializer, AbstractGui
 
 
 class ButtonsInitializer(AbstractButtonsInitializer):
 
     def __init__(
         self,
+        gui_instance: type[AbstractGui],
         panel_instance: MonitoringPanel,
         button_events_connection_method: Callable[[str], None]
     ) -> None:
-        super().__init__(panel_instance, button_events_connection_method)
-        # self._init_combobox_button_event(panel_instance)
-        # self._init_switch_button_event(panel_instance)
+        super().__init__(gui_instance, panel_instance, button_events_connection_method)
+        self.add_binds_to_rendering_buttons(gui_instance, panel_instance)
 
-    # def _init_combobox_button_event(
-    #     self,
-    #     panel_instance: MonitoringPanel
-    # ) -> None:
-    #     panel_instance.ui.comboBox.popupAboutToBeShown.connect(
-    #         lambda: panel_instance.event_switch_control()
-    #     )
+    def add_binds_to_rendering_buttons(
+        self,
+        gui_instance: type[AbstractGui],
+        panel_instance: MonitoringPanel
+    ) -> None:
 
-    # def _init_switch_button_event(
-    #     self,
-    #     panel_instance: MonitoringPanel
-    # ) -> None:
-    #     panel_instance.ui.radioButton.clicked.connect(
-    #         lambda: panel_instance.event_combobox_control()
-    #     )
+        def resume_working_action(machine_name: str) -> None:
+            if machine := gui_instance.available_machines.get(machine_name):
+                gui_instance._request_to_machine(
+                    machine, ControlEvent.RESUME
+                )
+
+        panel_instance.bind_render_button(
+            machine_name='1',
+            action=lambda: resume_working_action('1'),
+            custom_button_text='1'
+        )
+        panel_instance.bind_render_button(
+            machine_name='2',
+            action=lambda: resume_working_action('2'),
+            custom_button_text='2'
+        )
+        panel_instance.bind_render_button(
+            machine_name='3',
+            action=lambda: resume_working_action('3'),
+            custom_button_text='3'
+        )
+        panel_instance.bind_render_button(
+            machine_name='4',
+            action=lambda: resume_working_action('4'),
+            custom_button_text='4'
+        )
 
     def _init_buttons_events(
         self,

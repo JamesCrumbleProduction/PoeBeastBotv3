@@ -36,7 +36,7 @@ class Ui_Dialog(object):
         Dialog.setMouseTracking(False)
         Dialog.setFocusPolicy(Qt.WheelFocus)
         icon = QIcon()
-        icon.addFile(r"D:\pprojects\poe_beast_bot_v3\monitoring_panel\app\panels\extended_mod_panel\design\raw_design\Bestiary_Brimmed_Hat_inventory_icon.webp",
+        icon.addFile(u"../../../default_mod_panel/design/raw_design/Bestiary_Brimmed_Hat_inventory_icon.webp",
                      QSize(), QIcon.Normal, QIcon.Off)
         Dialog.setWindowIcon(icon)
         Dialog.setWindowOpacity(1.000000000000000)
@@ -160,6 +160,30 @@ class Ui_Dialog(object):
         self.textBrowser_6.setFrameShadow(QFrame.Sunken)
         self.textBrowser_6.setLineWidth(1)
         self.textBrowser_6.setAutoFormatting(QTextEdit.AutoNone)
+        self.renderButton = QToolButton(Dialog)
+        self.renderButton.setObjectName(u"renderButton")
+        self.renderButton.setGeometry(QRect(340, 250, 31, 31))
+        self.renderButton_2 = QToolButton(Dialog)
+        self.renderButton_2.setObjectName(u"renderButton_2")
+        self.renderButton_2.setGeometry(QRect(390, 250, 31, 31))
+        self.renderButton_3 = QToolButton(Dialog)
+        self.renderButton_3.setObjectName(u"renderButton_3")
+        self.renderButton_3.setGeometry(QRect(440, 250, 31, 31))
+        self.renderButton_4 = QToolButton(Dialog)
+        self.renderButton_4.setObjectName(u"renderButton_4")
+        self.renderButton_4.setGeometry(QRect(490, 250, 31, 31))
+        self.renderButton_5 = QToolButton(Dialog)
+        self.renderButton_5.setObjectName(u"renderButton_5")
+        self.renderButton_5.setGeometry(QRect(340, 300, 31, 31))
+        self.renderButton_8 = QToolButton(Dialog)
+        self.renderButton_8.setObjectName(u"renderButton_8")
+        self.renderButton_8.setGeometry(QRect(490, 300, 31, 31))
+        self.renderButton_6 = QToolButton(Dialog)
+        self.renderButton_6.setObjectName(u"renderButton_6")
+        self.renderButton_6.setGeometry(QRect(390, 300, 31, 31))
+        self.renderButton_7 = QToolButton(Dialog)
+        self.renderButton_7.setObjectName(u"renderButton_7")
+        self.renderButton_7.setGeometry(QRect(440, 300, 31, 31))
 
         self.retranslateUi(Dialog)
 
@@ -207,4 +231,20 @@ class Ui_Dialog(object):
                                                               "p, li { white-space: pre-wrap; }\n"
                                                               "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
                                                               "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Party machine actions</span></p></body></html>", None))
+        self.renderButton.setText(
+            QCoreApplication.translate("Dialog", u"...", None))
+        self.renderButton_2.setText(
+            QCoreApplication.translate("Dialog", u"...", None))
+        self.renderButton_3.setText(
+            QCoreApplication.translate("Dialog", u"...", None))
+        self.renderButton_4.setText(
+            QCoreApplication.translate("Dialog", u"...", None))
+        self.renderButton_5.setText(
+            QCoreApplication.translate("Dialog", u"...", None))
+        self.renderButton_8.setText(
+            QCoreApplication.translate("Dialog", u"...", None))
+        self.renderButton_6.setText(
+            QCoreApplication.translate("Dialog", u"...", None))
+        self.renderButton_7.setText(
+            QCoreApplication.translate("Dialog", u"...", None))
     # retranslateUi
