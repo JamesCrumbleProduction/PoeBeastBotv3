@@ -48,8 +48,9 @@ class BeastsFindingAction(AbstractAction):
         '_permissions',
         '_maps_scanner',
         '_stash_scanner',
-        '_tabs_coordinates',
         '_scarabs_scanner',
+        '_tabs_coordinates',
+        'is_party_accepted',
         '_ressurect_scanner',
         '_stash_io_controller',
         '_share_data_connector',
@@ -65,6 +66,7 @@ class BeastsFindingAction(AbstractAction):
     def __init__(self, bot_data_adapter: BotDataAdapter):
         super().__init__(bot_data_adapter)
         self._permissions = set()
+        self.is_party_accepted: bool = False
         self._past_location_content: LocationContent = None
 
         self._init_stash_data()
@@ -169,15 +171,14 @@ class BeastsFindingAction(AbstractAction):
 
     def _enter_to_stash(self) -> None:
         while True:
-            if coord := self._stash_scanner.indentify_by_first():
-                CommonIOController.move_and_click(coord)
-                time.sleep(0.3)
+            iterator = self._stash_scanner.iterate_all_by_first_founded()
 
-            if (
-                self._unloaded_stash_scanner.get_condition_by_one() is True
-                or self._scarabs_scanner.get_condition_by_one() is True
-                or self._maps_scanner.get_condition_by_one() is True
-            ):
+            if map_device_name_tag_coord := next(iterator):
+                CommonIOController.move_and_click(map_device_name_tag_coord)
+                time.sleep(0.3)
+                self._stash_scanner.update_source()
+
+            if next(iterator) is not None:
                 break
 
             time.sleep(action_settings.ENTER_TO_INTERVAL)
@@ -329,7 +330,14 @@ class BeastsFindingAction(AbstractAction):
     def _wait_until_party_is_accepted(self) -> None:
         while True:
             for action in ACTIONS[PARTY_ACCEPT_ACTION].action.execute_action():
+                if not settings.PARTY_ACCEPT_LOCK:
+                    if self.bot_data_adapter.status in (
+                        MachineStatus.WORKING,
+                    ):
+                        return
+
                 if action is ControlAction.DONE:
+                    self.is_party_accepted = True
                     RequestsController.execute(
                         Service.LINKING_SERVER,
                         Routes.LinkingServer.Control.idles_to_founder,
@@ -432,3 +440,5 @@ class BeastsFindingAction(AbstractAction):
 
         if not self._in_hideout():
             self._comeback_into_ho()
+
+        self.is_party_accepted = False

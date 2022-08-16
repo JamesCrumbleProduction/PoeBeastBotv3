@@ -2,7 +2,7 @@ import orjson
 import requests
 
 from typing import Any
-from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import Future
 
 
 from .structure import (
@@ -19,6 +19,7 @@ from .exceptions import (
 )
 from ..structure import Machine
 from ..settings import settings
+from ..services.executor import REQUESTS_EXECUTOR
 
 
 REQUEST_PLACEHOLDER: str = (
@@ -30,8 +31,7 @@ class RequestsController:
 
     _existed_ConnectionRoutes: dict[RoutePrefix, dict[str, Route]] = None
 
-    def __init__(self, executor: ThreadPoolExecutor):
-        self._executor = executor
+    def __init__(self):
         self._init_existed_ConnectionRoutes()
 
     def _init_existed_ConnectionRoutes(cls) -> None:
@@ -134,8 +134,8 @@ class RequestsController:
         body: dict[str, Any] = dict(),
         serialize: bool = False,
         timeout: int = settings.REQUEST_TIMEOUT
-    ) -> Any | Future | None:
-        return self._executor.submit(
+    ) -> Future[Any | None]:
+        return REQUESTS_EXECUTOR.submit(
             self._execute_request,
             machine, request_event,
             body, serialize, timeout

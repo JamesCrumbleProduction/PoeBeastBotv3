@@ -1,0 +1,3 @@
+[submodule "UpdatedPoeHelper"]
+	path = UpdatedPoeHelper
+	url = https://github.com/JamesCrumble/UpdatedPoeHelper

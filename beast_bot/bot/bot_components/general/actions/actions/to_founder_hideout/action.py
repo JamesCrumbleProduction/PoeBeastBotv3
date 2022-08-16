@@ -78,7 +78,7 @@ class ToFounderHideout(AbstractAction):
         )
         worker_machines: list[Machine] = list(
             Machine(**raw_machine_data)
-            for raw_machine_data in machines_raw_data
+            for raw_machine_data in machines_raw_data.values()
         )
 
         for machine in worker_machines:

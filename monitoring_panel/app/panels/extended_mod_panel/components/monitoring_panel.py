@@ -1,10 +1,14 @@
+from typing import Callable
 from PySide6.QtCore import Signal
 from PySide6.QtGui import QTextCursor
-from PySide6.QtWidgets import QComboBox
+from PySide6.QtWidgets import QComboBox, QToolButton
 
+from .exceptions import MaxRenderButtonsBindingReached
 from ..design.compiled_design import Ui_Dialog
 from ...abstract_gui_components import AbstractMonitoringPanel
 from ....structure import Machine
+
+RENDER_BUTTON_PREFIX: str = 'renderButton'
 
 
 class ComboBox(QComboBox):
@@ -24,6 +28,12 @@ class MonitoringPanel(AbstractMonitoringPanel):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
 
+        self.binded_rendering_buttons: dict[str, QToolButton] = dict()
+        self.rendering_buttons: list[QToolButton] = list()  # sorted
+
+        self._is_changed: bool = True
+        self.machines: dict[str, Machine] = dict()
+
         if comboBox := getattr(self.ui, 'comboBox', None):
             comboBox: QComboBox
             self.ui.comboBox = ComboBox(self)
@@ -33,8 +43,46 @@ class MonitoringPanel(AbstractMonitoringPanel):
             self.ui.comboBox.setEditable(comboBox.isEditable())
             self.ui.radioButton.setChecked(True)
 
-        self._is_changed: bool = True
-        self.machines: dict[str, Machine] = dict()
+        self._init_rendering_buttons()
+        self._hide_rendering_buttons()
+
+    def bind_render_button(
+        self,
+        /,
+        machine_name: str,
+        action: Callable,
+        custom_button_text: str = None
+    ) -> None:
+        if not self.rendering_buttons:
+            raise MaxRenderButtonsBindingReached(
+                'Cannot binding another renderButton '
+                f'couse limit "{len(self.binded_rendering_buttons)}" was reached'
+            )
+
+        rendering_button = self.rendering_buttons.pop()
+
+        if custom_button_text is not None:
+            rendering_button.setText(custom_button_text)
+
+        rendering_button.clicked.connect(action)
+        self.binded_rendering_buttons[machine_name] = rendering_button
+
+    def _init_rendering_buttons(self) -> None:
+        self.rendering_buttons = [
+            getattr(self.ui, render_button)
+            for render_button in sorted(
+                [
+                    ui_element
+                    for ui_element in self.ui.__dict__.keys()
+                    if RENDER_BUTTON_PREFIX in ui_element
+                ],
+                reverse=True
+            )
+        ]
+
+    def _hide_rendering_buttons(self) -> None:
+        for rendering_button in self.rendering_buttons:
+            rendering_button.hide()
 
     def get_selected_machine_from_comboBox(self) -> Machine | None:
         if machine_fake_name := self.ui.comboBox.currentText():

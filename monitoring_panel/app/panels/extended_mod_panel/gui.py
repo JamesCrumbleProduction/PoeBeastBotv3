@@ -1,7 +1,6 @@
 from fastapi import APIRouter
 from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QApplication
-from concurrent.futures import ThreadPoolExecutor
 
 from .helpers import add_machine_when_not_exists
 from .components import ButtonsInitializer, EventsInitializer, MonitoringPanel
@@ -11,7 +10,6 @@ from ..structure import (
     ControlEvent,
     ControlEventButton,
 )
-from ...settings import settings
 from ...structure import Machine, MachineStatus
 from ...requests_controller import RequestsController
 
@@ -48,7 +46,7 @@ class GUI(AbstractGui):
             cls._instance._panel_instance = MonitoringPanel()
             cls._instance._events_initializer = EventsInitializer()
             cls._instance._buttons_initializer = ButtonsInitializer(
-                cls._instance._panel_instance, cls._instance._define_pressed_button
+                cls._instance, cls._instance._panel_instance, cls._instance._define_pressed_button
             )
             cls._instance._server_methods = ThreadSafeServerMethods()
 
@@ -79,11 +77,7 @@ class GUI(AbstractGui):
         return self._server_methods
 
     def __init__(self):
-        self._requests = RequestsController(
-            ThreadPoolExecutor(
-                max_workers=settings.WORKERS
-            )
-        )
+        self._requests = RequestsController()
         self._server_methods.add_selectable_machine_signal.connect(
             self._add_selectable_machine
         )
@@ -124,9 +118,9 @@ class GUI(AbstractGui):
     def _request_to_machine(
         self,
         machine: Machine,
-        event_button: ControlEventButton
+        control_event: ControlEvent
     ) -> None:
-        if request_event := self._events_initializer.get(event_button.event):
+        if request_event := self._events_initializer.get(control_event):
             if machine.status not in (
                 MachineStatus.ERROR,
                 MachineStatus.OUT_OF_MAPS,
@@ -142,10 +136,10 @@ class GUI(AbstractGui):
                     self._founder_machine is not None
                     and machine.name == self._founder_machine.name
                 ):
-                    self._request_to_machine(machine, event_button)
+                    self._request_to_machine(machine, event_button.event)
             elif event_button.event_side is EventSide.WORKER_SIDE:
                 if not machine.is_idle_member():
-                    self._request_to_machine(machine, event_button)
+                    self._request_to_machine(machine, event_button.event)
 
         if event_button := self._buttons_initializer.get(button_name):
             if event_button.event in (ControlEvent.PAUSE, ControlEvent.RESUME):

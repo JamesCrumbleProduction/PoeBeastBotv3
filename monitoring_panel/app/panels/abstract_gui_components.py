@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+
 from typing import Callable
 from PySide6.QtCore import QObject
 from abc import ABC, abstractmethod
@@ -65,6 +68,7 @@ class AbstractButtonsInitializer(ABC):
 
     def __init__(
         self,
+        gui_instance: type[AbstractGui],
         panel_instance: type[QDialog],
         button_events_connection_method: Callable[[str], None]
     ) -> None:

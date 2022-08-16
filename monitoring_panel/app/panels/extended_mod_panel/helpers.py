@@ -41,6 +41,8 @@ def add_machine_when_not_exists(func):
                 )
 
             self_statement.panel_instance.machines[machine.name] = machine
+            if rendering_button := self_statement.panel_instance.binded_rendering_buttons.get(machine.name):
+                rendering_button.setHidden(False)
 
         func(*args, **kwargs)
 
