@@ -1,4 +1,6 @@
 import os
+import tempfile
+import subprocess
 
 from dataclasses import dataclass
 
@@ -92,20 +94,33 @@ RESOURCE_QRC_FILE = QtDesignFiles(
 ).validate('resources_rc.py')
 
 
+# DESIGN_UI_COMPILE_COMMAND: str = (
+#     f'pyside6-uic {DESIGN_UI_FILE.compiled_file_path_raw()} > '
+#     f'{DESIGN_UI_FILE.compile_file_path_compiled()}'
+# )
+# RESOURCES_QRC_COMPILE_COMMAND: str = (
+#     f'pyside6-rcc {RESOURCE_QRC_FILE.compiled_file_path_raw()} > '
+#     f'{RESOURCE_QRC_FILE.compile_file_path_compiled()}'
+# )
+
+temp_file = tempfile.NamedTemporaryFile()
+
 DESIGN_UI_COMPILE_COMMAND: str = (
-    f'pyside6-uic {DESIGN_UI_FILE.compiled_file_path_raw()} > '
-    f'{DESIGN_UI_FILE.compile_file_path_compiled()}'
+    f'pyside6-uic {DESIGN_UI_FILE.compiled_file_path_raw()} > {temp_file.name}'
 )
-RESOURCES_QRC_COMPILE_COMMAND: str = (
-    f'pyside6-rcc {RESOURCE_QRC_FILE.compiled_file_path_raw()} > '
-    f'{RESOURCE_QRC_FILE.compile_file_path_compiled()}'
-)
-
-
-print('DESIGN_UI_COMPILE_COMMAND is start to executing...')
+temp_file.close()
 os.system(DESIGN_UI_COMPILE_COMMAND)
-print('DESIGN_UI_COMPILE_COMMAND is done and successfully compiled')
+DESIGN_UI_COMPILE_DATA_STREAM: str = open(temp_file.name, 'r').read()
 
-print('RESOURCES_QRC_COMPILE_COMMAND is start to executing...')
-os.system(RESOURCES_QRC_COMPILE_COMMAND)
-print('RESOURCES_QRC_COMPILE_COMMAND is done and successfully compiled')
+# with open(DESIGN_UI_FILE.compile_file_path_compiled(), 'w+') as saving_file:
+#     saving_file.write(DESIGN_UI_COMPILE_DATA_STREAM)
+
+# print(COMPILED_DESIGN_UI)
+
+# print('DESIGN_UI_COMPILE_COMMAND is start to executing...')
+# os.system(DESIGN_UI_COMPILE_COMMAND)
+# print('DESIGN_UI_COMPILE_COMMAND is done and successfully compiled')
+
+# print('RESOURCES_QRC_COMPILE_COMMAND is start to executing...')
+# os.system(RESOURCES_QRC_COMPILE_COMMAND)
+# print('RESOURCES_QRC_COMPILE_COMMAND is done and successfully compiled')
