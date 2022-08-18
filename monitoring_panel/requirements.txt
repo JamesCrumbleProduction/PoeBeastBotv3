@@ -1,5 +1,5 @@
-# DESIGNER COMPILTER PACKAGE -> PySide6
 PySide6
 fastapi
 tk
 pydantic
+GitPython
