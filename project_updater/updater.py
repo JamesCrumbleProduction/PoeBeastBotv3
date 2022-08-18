@@ -35,7 +35,7 @@ class ProjectUpdater:
     def _checkout_to_updating_branch(self) -> None:
         if self.repo.active_branch.name != UPDATING_BRANCH:
             UPDATER_LOGGER.info(
-                f'PROJECT WILL SWITCH TO "{UPDATING_BRANCH}" WITH FORCE... (ACTIVE BRANCH: "{self.repo.active_branch.name}")'
+                f'PROJECT WILL SWITCH TO "{UPDATING_BRANCH}" BRANCH FORCE={CHECKOUT_WITH_FORCE} (ACTIVE BRANCH: "{self.repo.active_branch.name}")'
             )
             self.repo.git.checkout(UPDATING_BRANCH, force=CHECKOUT_WITH_FORCE)
 
