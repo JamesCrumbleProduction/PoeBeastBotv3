@@ -4,7 +4,7 @@ import sys
 
 from logger import UPDATER_LOGGER
 
-UPDATING_BRANCH: str = 'develop'
+UPDATING_BRANCH: str = 'master'
 CHECKOUT_WITH_FORCE: bool = False
 SHOULD_PENDING_FOR_UPDATES: bool = (
     False
