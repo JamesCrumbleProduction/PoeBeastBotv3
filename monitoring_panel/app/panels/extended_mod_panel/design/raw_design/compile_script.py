@@ -3,6 +3,7 @@ import re
 import tempfile
 
 from dataclasses import dataclass, replace
+from typing import Callable
 
 ROOT_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), '..', '..',
@@ -12,8 +13,12 @@ LOCAL_FOLDER_PATH: str = os.path.join(
     os.path.dirname(os.path.abspath(__file__))
 )
 
-REPLACEMENT: dict[re.Pattern, str] = {
-    re.compile('icon\.addFile\((.+)\)'): f'r"{os.path.join(LOCAL_FOLDER_PATH, "Bestiary_Brimmed_Hat_inventory_icon.webp")}", QSize(), QIcon.Normal, QIcon.Off'
+DESIGN_REPLACEMENTS: dict[Callable[[str], tuple[int, int]], str] = {
+    lambda string: re.compile(
+        'icon\.addFile\((.+)\)'
+    ).search(string).span(1): (
+        f'r"{os.path.join(LOCAL_FOLDER_PATH, "Bestiary_Brimmed_Hat_inventory_icon.webp")}", QSize(), QIcon.Normal, QIcon.Off'
+    )
 }
 
 
@@ -92,6 +97,47 @@ def find_file(extension: str = None, full_name: str = None) -> FileData:
                 )
 
 
+def parse_data_stream(
+    data_stream: str,
+    replacements: dict[Callable[[str], tuple[int, int]], str] = None
+) -> str:
+    if replacements is None:
+        return data_stream
+
+    output: str = ''
+
+    slices_data = sorted(
+        {
+            replace_value: parse_func(data_stream)
+            for parse_func, replace_value in replacements.items()
+        }.items(),
+        key=lambda v: v[1][0]
+    )
+
+    last_lower: int = 0
+
+    for replace_value, slice_ in slices_data:
+        output += data_stream[last_lower:slice_[0]]
+        output += replace_value
+        last_lower += slice_[1]
+
+    if last_lower != len(data_stream):
+        output += data_stream[last_lower:]
+
+    return output
+
+
+def generate_raw_data_stream(command_prefix: str, file_path: str) -> str:
+
+    temp_file = tempfile.NamedTemporaryFile()
+    temp_file.close()
+
+    shell_command: str = f'{command_prefix} {file_path} > {temp_file.name}'
+    print(f'EXECUTING "{shell_command}" COMMAND')
+    os.system(shell_command)
+    return open(temp_file.name, 'r').read()
+
+
 DESIGN_UI_FILE = QtDesignFiles(
     raw_path=find_file('ui'),
     compiled_path=find_file(full_name='design.py')
@@ -102,70 +148,20 @@ RESOURCE_QRC_FILE = QtDesignFiles(
 ).validate('resources_rc.py')
 
 
-# DESIGN_UI_COMPILE_COMMAND: str = (
-#     f'pyside6-uic {DESIGN_UI_FILE.compiled_file_path_raw()} > '
-#     f'{DESIGN_UI_FILE.compile_file_path_compiled()}'
-# )
-# RESOURCES_QRC_COMPILE_COMMAND: str = (
-#     f'pyside6-rcc {RESOURCE_QRC_FILE.compiled_file_path_raw()} > '
-#     f'{RESOURCE_QRC_FILE.compile_file_path_compiled()}'
-# )
-
-temp_file = tempfile.NamedTemporaryFile()
-temp_file.close()
-
-DESIGN_UI_COMPILE_COMMAND: str = (
-    f'pyside6-uic {DESIGN_UI_FILE.compiled_file_path_raw()} > {temp_file.name}'
+DESIGN_UI_PARSED_COMPILED_DATA: str = parse_data_stream(
+    generate_raw_data_stream(
+        'pyside6-uic', DESIGN_UI_FILE.compiled_file_path_raw()
+    ), DESIGN_REPLACEMENTS
 )
-os.system(DESIGN_UI_COMPILE_COMMAND)
-DESIGN_UI_COMPILE_DATA_STREAM: str = open(temp_file.name, 'r').read()
-
-
-output: str = ''
-slices_data = sorted(
-    {
-        replace_value: pattern.search(DESIGN_UI_COMPILE_DATA_STREAM).span(1)
-        for pattern, replace_value in REPLACEMENT.items()
-    }.items(),
-    key=lambda v: v[1]
+RESOURCES_QRC_PARSED_COMPILED_DATA: str = parse_data_stream(
+    generate_raw_data_stream(
+        'pyside6-rcc', RESOURCE_QRC_FILE.compiled_file_path_raw()
+    )
 )
 
-last_lower: int = 0
-
-for replace_value, slice_ in slices_data:
-    # print(replace_value, slice_)
-    output += DESIGN_UI_COMPILE_DATA_STREAM[last_lower:slice_[0]]
-    output += replace_value
-
-    # TODO slice_[1] and len(replace_value) isn't correct cos of replace_value can be longer or shorter by span value
-    last_lower += len(replace_value)  # <-
-
-if last_lower != len(DESIGN_UI_COMPILE_DATA_STREAM):
-    output += DESIGN_UI_COMPILE_DATA_STREAM[last_lower:]
+with open(DESIGN_UI_FILE.compile_file_path_compiled(), 'w') as design_ui_file:
+    design_ui_file.write(DESIGN_UI_PARSED_COMPILED_DATA)
 
 
-print(output)
-
-# for pattern, replace_value in REPLACEMENT.items():
-#     DESIGN_UI_COMPILE_DATA_STREAM[
-#         slice(
-#             *pattern.search(DESIGN_UI_COMPILE_DATA_STREAM).span(1)
-#         )
-#     ] = replace_value
-# print(DESIGN_UI_COMPILE_DATA_STREAM)
-# print(
-#     DESIGN_UI_COMPILE_DATA_STREAM[
-#         slice(*re.search(
-#             'icon\.addFile\((.+)\)',
-#         ).span(1))
-#     ]
-# )
-# print(COMPILED_DESIGN_UI)
-
-# print('DESIGN_UI_COMPILE_COMMAND is start to executing...')
-# os.system(DESIGN_UI_COMPILE_COMMAND)
-# print('DESIGN_UI_COMPILE_COMMAND is done and successfully compiled')
-
-# print('RESOURCES_QRC_COMPILE_COMMAND is start to executing...')
-# os.system(RESOURCES_QRC_COMPILE_COMMAND)
-# print('RESOURCES_QRC_COMPILE_COMMAND is done and successfully compiled')
+with open(RESOURCE_QRC_FILE.compile_file_path_compiled(), 'w') as resource_qrc_file:
+    resource_qrc_file.write(RESOURCES_QRC_PARSED_COMPILED_DATA)
