@@ -2,7 +2,7 @@ import time
 
 from enum import Enum
 from dataclasses import dataclass
-from httpx._exceptions import ConnectTimeout, ReadTimeout
+from httpx._exceptions import ConnectTimeout, ReadTimeout, ConnectError
 
 from .requests_controller import Routes, Service, RequestsController
 from ...services.logger import BOT_LOGGER
@@ -42,7 +42,7 @@ def wait_monitoring_server_connection() -> None:
                     BOT_LOGGER.info('Connected !!!. Starting to data init')
                     break
 
-        except (ConnectTimeout, TimeoutError, ReadTimeout) as exception:
+        except (ConnectTimeout, TimeoutError, ReadTimeout, ConnectError) as exception:
             BOT_LOGGER.info(
                 f'Linking server doesn\'t responsing... Part of exception: {exception}'
             )
