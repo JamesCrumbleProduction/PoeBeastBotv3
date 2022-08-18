@@ -1,12 +1,20 @@
 import os
+import re
 import tempfile
-import subprocess
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 ROOT_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), '..', '..',
 )
+
+LOCAL_FOLDER_PATH: str = os.path.join(
+    os.path.dirname(os.path.abspath(__file__))
+)
+
+REPLACEMENT: dict[re.Pattern, str] = {
+    re.compile('icon\.addFile\((.+)\)'): f'r"{os.path.join(LOCAL_FOLDER_PATH, "Bestiary_Brimmed_Hat_inventory_icon.webp")}", QSize(), QIcon.Normal, QIcon.Off'
+}
 
 
 @dataclass
@@ -104,17 +112,54 @@ RESOURCE_QRC_FILE = QtDesignFiles(
 # )
 
 temp_file = tempfile.NamedTemporaryFile()
+temp_file.close()
 
 DESIGN_UI_COMPILE_COMMAND: str = (
     f'pyside6-uic {DESIGN_UI_FILE.compiled_file_path_raw()} > {temp_file.name}'
 )
-temp_file.close()
 os.system(DESIGN_UI_COMPILE_COMMAND)
 DESIGN_UI_COMPILE_DATA_STREAM: str = open(temp_file.name, 'r').read()
 
-# with open(DESIGN_UI_FILE.compile_file_path_compiled(), 'w+') as saving_file:
-#     saving_file.write(DESIGN_UI_COMPILE_DATA_STREAM)
 
+output: str = ''
+slices_data = sorted(
+    {
+        replace_value: pattern.search(DESIGN_UI_COMPILE_DATA_STREAM).span(1)
+        for pattern, replace_value in REPLACEMENT.items()
+    }.items(),
+    key=lambda v: v[1]
+)
+
+last_lower: int = 0
+
+for replace_value, slice_ in slices_data:
+    # print(replace_value, slice_)
+    output += DESIGN_UI_COMPILE_DATA_STREAM[last_lower:slice_[0]]
+    output += replace_value
+
+    # TODO slice_[1] and len(replace_value) isn't correct cos of replace_value can be longer or shorter by span value
+    last_lower += len(replace_value)  # <-
+
+if last_lower != len(DESIGN_UI_COMPILE_DATA_STREAM):
+    output += DESIGN_UI_COMPILE_DATA_STREAM[last_lower:]
+
+
+print(output)
+
+# for pattern, replace_value in REPLACEMENT.items():
+#     DESIGN_UI_COMPILE_DATA_STREAM[
+#         slice(
+#             *pattern.search(DESIGN_UI_COMPILE_DATA_STREAM).span(1)
+#         )
+#     ] = replace_value
+# print(DESIGN_UI_COMPILE_DATA_STREAM)
+# print(
+#     DESIGN_UI_COMPILE_DATA_STREAM[
+#         slice(*re.search(
+#             'icon\.addFile\((.+)\)',
+#         ).span(1))
+#     ]
+# )
 # print(COMPILED_DESIGN_UI)
 
 # print('DESIGN_UI_COMPILE_COMMAND is start to executing...')
