@@ -1,10 +1,24 @@
 import os
+import re
+import tempfile
 
+from typing import Callable
 from dataclasses import dataclass
 
 ROOT_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), '..', '..',
 )
+
+DESIGN_REPLACEMENTS: dict[Callable[[str], tuple[int, int]], str] = {
+    # should fix window icon problem with path
+    lambda string: (0, 0): 'import os\n',
+    lambda string: re.search('icon\.addFile\((.+)\)', string).span(1): (
+        'f"{os.path.join(os.path.dirname(os.path.abspath(__file__)), \'Bestiary_Brimmed_Hat_inventory_icon.webp\')}", QSize(), QIcon.Normal, QIcon.Off'
+    ),
+
+    # fixing import problems after recompiling
+    lambda string: re.search('import resources_rc', string).span(): '',
+}
 
 
 @dataclass
@@ -82,6 +96,48 @@ def find_file(extension: str = None, full_name: str = None) -> FileData:
                 )
 
 
+def parse_data_stream(
+    data_stream: str,
+    replacements: dict[Callable[[str], tuple[int, int]], str] = None
+) -> str:
+    if replacements is None:
+        return data_stream
+
+    output: str = ''
+
+    slices_data = sorted(
+        {
+            replace_value: parse_func(data_stream)
+            for parse_func, replace_value in replacements.items()
+        }.items(),
+        key=lambda v: v[1][0]
+    )
+
+    last_lower: int = 0
+
+    for replace_value, slice_ in slices_data:
+        output += data_stream[last_lower:slice_[0]]
+        output += replace_value
+        last_lower = slice_[1]
+
+    if last_lower != len(data_stream):
+        output += data_stream[last_lower:]
+
+    return output
+
+
+def generate_raw_data_stream(command_prefix: str, file_path: str) -> str:
+
+    temp_file = tempfile.NamedTemporaryFile()
+    temp_file.close()
+
+    shell_command: str = f'{command_prefix} {file_path} > {temp_file.name}'
+    print(f'EXECUTING "{shell_command}" COMMAND')
+    if os.system(shell_command) != 0:
+        raise ValueError('Execution command return wrong complited value')
+    return open(temp_file.name, 'r').read()
+
+
 DESIGN_UI_FILE = QtDesignFiles(
     raw_path=find_file('ui'),
     compiled_path=find_file(full_name='design.py')
@@ -92,20 +148,20 @@ RESOURCE_QRC_FILE = QtDesignFiles(
 ).validate('resources_rc.py')
 
 
-DESIGN_UI_COMPILE_COMMAND: str = (
-    f'pyside6-uic {DESIGN_UI_FILE.compiled_file_path_raw()} > '
-    f'{DESIGN_UI_FILE.compile_file_path_compiled()}'
+DESIGN_UI_PARSED_COMPILED_DATA: str = parse_data_stream(
+    generate_raw_data_stream(
+        'pyside6-uic', DESIGN_UI_FILE.compiled_file_path_raw()
+    ), DESIGN_REPLACEMENTS
 )
-RESOURCES_QRC_COMPILE_COMMAND: str = (
-    f'pyside6-rcc {RESOURCE_QRC_FILE.compiled_file_path_raw()} > '
-    f'{RESOURCE_QRC_FILE.compile_file_path_compiled()}'
+RESOURCES_QRC_PARSED_COMPILED_DATA: str = parse_data_stream(
+    generate_raw_data_stream(
+        'pyside6-rcc', RESOURCE_QRC_FILE.compiled_file_path_raw()
+    )
 )
 
+with open(DESIGN_UI_FILE.compile_file_path_compiled(), 'w') as design_ui_file:
+    design_ui_file.write(DESIGN_UI_PARSED_COMPILED_DATA)
 
-print('DESIGN_UI_COMPILE_COMMAND is start to executing...')
-os.system(DESIGN_UI_COMPILE_COMMAND)
-print('DESIGN_UI_COMPILE_COMMAND is done and successfully compiled')
 
-print('RESOURCES_QRC_COMPILE_COMMAND is start to executing...')
-os.system(RESOURCES_QRC_COMPILE_COMMAND)
-print('RESOURCES_QRC_COMPILE_COMMAND is done and successfully compiled')
+with open(RESOURCE_QRC_FILE.compile_file_path_compiled(), 'w') as resource_qrc_file:
+    resource_qrc_file.write(RESOURCES_QRC_PARSED_COMPILED_DATA)
