@@ -13,7 +13,7 @@ DESIGN_REPLACEMENTS: dict[Callable[[str], tuple[int, int]], str] = {
     # should fix window icon problem with path
     lambda string: (0, 0): 'import os\n',
     lambda string: re.search('icon\.addFile\((.+)\)', string).span(1): (
-        'f"{os.path.join(os.path.dirname(os.path.abspath(__file__)), \'Bestiary_Brimmed_Hat_inventory_icon.webp\')}", QSize(), QIcon.Normal, QIcon.Off'
+        'f"{os.path.join(os.path.dirname(os.path.abspath(__file__)), \'..\', \'raw_design\', \'Bestiary_Brimmed_Hat_inventory_icon.webp\')}", QSize(), QIcon.Normal, QIcon.Off'
     ),
 
     # fixing import problems after recompiling
