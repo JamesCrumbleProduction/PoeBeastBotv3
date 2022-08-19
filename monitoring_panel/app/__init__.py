@@ -1,7 +1,7 @@
 # autopep8: off
-
 import os
 import sys
+
 from .settings import settings
 
 if settings.AUTO_UPDATE is True:
