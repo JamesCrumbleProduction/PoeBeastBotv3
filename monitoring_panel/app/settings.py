@@ -4,7 +4,7 @@ import logging
 
 from pydantic import BaseSettings
 
-SAVE_SETTINGS: bool = True
+SAVE_SETTINGS: bool = False
 SAVE_SETTINGS_FILENAME: str = 'saved_settings.json'
 SAVE_SETTINGS_PATH: str = os.path.join(
     os.path.abspath(os.path.dirname(__file__)),
@@ -16,6 +16,8 @@ class Settings(BaseSettings):
 
     PORT: int = 4000
     HOST: str = '0.0.0.0'
+
+    AUTO_UPDATE: bool = True
 
     LOGGING_LEVEL: int = logging.DEBUG
     LOGGING_FILENAME: str = 'logging.log'

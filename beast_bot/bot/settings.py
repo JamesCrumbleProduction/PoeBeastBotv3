@@ -55,6 +55,8 @@ class Settings(BaseSettings):
     WORKERS: int = 3
     REQUEST_TIMEOUT: int = 1  # seconds
 
+    AUTO_UPDATE: bool = True
+
     VM_NAME: str = 'v3.18'  # Machine name (showing in monitoring panel)
     # should be feeled when NOTIFY_BY_MESSAGE was enabled
     PARTY_LEADER_NICKNAME: str = ''
