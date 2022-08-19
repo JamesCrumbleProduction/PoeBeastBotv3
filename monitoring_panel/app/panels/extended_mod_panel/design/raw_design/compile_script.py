@@ -2,23 +2,22 @@ import os
 import re
 import tempfile
 
-from dataclasses import dataclass, replace
 from typing import Callable
+from dataclasses import dataclass
 
 ROOT_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), '..', '..',
 )
 
-LOCAL_FOLDER_PATH: str = os.path.join(
-    os.path.dirname(os.path.abspath(__file__))
-)
-
 DESIGN_REPLACEMENTS: dict[Callable[[str], tuple[int, int]], str] = {
-    lambda string: re.compile(
-        'icon\.addFile\((.+)\)'
-    ).search(string).span(1): (
-        f'r"{os.path.join(LOCAL_FOLDER_PATH, "Bestiary_Brimmed_Hat_inventory_icon.webp")}", QSize(), QIcon.Normal, QIcon.Off'
-    )
+    # should fix window icon problem with path
+    lambda string: (0, 0): 'import os\n',
+    lambda string: re.search('icon\.addFile\((.+)\)', string).span(1): (
+        'f"{os.path.join(os.path.dirname(os.path.abspath(__file__)), \'Bestiary_Brimmed_Hat_inventory_icon.webp\')}", QSize(), QIcon.Normal, QIcon.Off'
+    ),
+
+    # fixing import problems after recompiling
+    lambda string: re.search('import resources_rc', string).span(): '',
 }
 
 
@@ -119,7 +118,7 @@ def parse_data_stream(
     for replace_value, slice_ in slices_data:
         output += data_stream[last_lower:slice_[0]]
         output += replace_value
-        last_lower += slice_[1]
+        last_lower = slice_[1]
 
     if last_lower != len(data_stream):
         output += data_stream[last_lower:]
@@ -134,7 +133,8 @@ def generate_raw_data_stream(command_prefix: str, file_path: str) -> str:
 
     shell_command: str = f'{command_prefix} {file_path} > {temp_file.name}'
     print(f'EXECUTING "{shell_command}" COMMAND')
-    os.system(shell_command)
+    if os.system(shell_command) != 0:
+        raise ValueError('Execution command return wrong complited value')
     return open(temp_file.name, 'r').read()
 
 
