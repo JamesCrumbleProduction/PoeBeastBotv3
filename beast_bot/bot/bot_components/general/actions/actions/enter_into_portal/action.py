@@ -54,8 +54,9 @@ class EnterIntoPortal(AbstractAction):
     #             yield portal_coord
 
     def _portals_coordinates(self, **kwargs) -> Iterator[Coordinate]:
-        for portal_coord in self._tempalates_defiles_and_ho.iterate_all_by_first_founded():
-            yield portal_coord
+        for portal_coord in self._tempalates_defiles_and_ho.iterate_one_by_each_founded():
+            if portal_coord is not None:
+                yield portal_coord
 
     def execute_action(self) -> Iterator[ControlAction]:
         yield from super().execute_action()
