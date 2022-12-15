@@ -37,6 +37,14 @@ class Paths:
         labels = os.path.join(__unpacking_action_templates, 'labels')
         other = __unpacking_action_templates
 
+    class ExtraContentTemplates:
+        __extra_content_templates = os.path.join(
+            ROOT_PATH, 'extra_content'
+        )
+        portal_action_templates = os.path.join(
+            __extra_content_templates, 'portal_action_templates'
+        )
+
 
 @dataclass
 class RawTemplates:
@@ -164,42 +172,17 @@ class RawTemplates:
             )
         )
 
-    def __str__(self) -> str:
-        return '\n'.join(
-            element
-            for element in (
-                '\n- - - - - - - UnpackingActionRawTemplates - - - - - - -\n',
-                '\n'.join(
-                    str(i)
-                    for i in self.UnpackingActionRawTemplates.beasts
-                ),
-                '\n'.join(
-                    str(i) for i in self.UnpackingActionRawTemplates.icons
-                ),
-                '\n'.join(
-                    str(i) for i in self.UnpackingActionRawTemplates.labels
-                ),
-                '\n'.join(
-                    str(i) for i in self.UnpackingActionRawTemplates.other
-                ),
-                '\n- - - - - - - BeastsBotRawTemplates - - - - - - -\n',
-                '\n'.join(
-                    str(i) for i in self.BeastsBotRawTemplates.buttons
-                ),
-                '\n'.join(
-                    str(i) for i in self.BeastsBotRawTemplates.maps
-                ),
-                '\n'.join(
-                    str(i) for i in self.BeastsBotRawTemplates.nametags
-                ),
-                '\n'.join(
-                    str(i) for i in self.BeastsBotRawTemplates.next_layout_nametags
-                ),
-                '\n'.join(
-                    str(i) for i in self.BeastsBotRawTemplates.other
-                ),
-                '\n'.join(
-                    str(i) for i in self.BeastsBotRawTemplates.scarabs
-                ),
+    class ExtraContentRawTemplates:
+        portal_action_templates = (
+            RawTemplate(
+                label=str(*portal_action_template.split('.')[:-1]),
+                path=os.path.join(
+                    Paths.ExtraContentTemplates.portal_action_templates, portal_action_template)
+            )
+            for portal_action_template in os.listdir(Paths.ExtraContentTemplates.portal_action_templates)
+            if os.path.isfile(
+                os.path.join(
+                    Paths.ExtraContentTemplates.portal_action_templates, portal_action_template
+                )
             )
         )
