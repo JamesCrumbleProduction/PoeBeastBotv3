@@ -1,8 +1,10 @@
 from enum import Enum
 from typing import Any
+# from dataclasses import field
+from dataclasses import dataclass
 from pydantic import BaseModel
 
-from .helpers import static_dataclass
+from .helpers import dataclass
 from .world_to_screen import Coordinate, Region
 
 
@@ -20,71 +22,71 @@ class ActionMeta(BaseModel):
     action_kwargs: dict[str, Any]
 
 
-@static_dataclass
+@dataclass
 class Coordinates:
 
-    @static_dataclass
+    @dataclass
     class Stash:
 
-        @static_dataclass
+        @dataclass
         class MapTabs:
-            first_map_tab: Coordinate = Coordinate(
+            first_map_tab = Coordinate(
                 x=100,
                 y=60,
             )
-            second_map_tab: Coordinate = Coordinate(
+            second_map_tab = Coordinate(
                 x=134,
                 y=60
             )
-            third_map_tab: Coordinate = Coordinate(
+            third_map_tab = Coordinate(
                 x=167,
                 y=60
             )
-            fourth_map_tab: Coordinate = Coordinate(
+            fourth_map_tab = Coordinate(
                 x=200,
                 y=60
             )
-            fifth_map_tab: Coordinate = Coordinate(
+            fifth_map_tab = Coordinate(
                 x=234,
                 y=60
             )
 
-        @static_dataclass
+        @dataclass
         class ScarabTabs:
-            first_scarab_tab: Coordinate = Coordinate(
+            first_scarab_tab = Coordinate(
                 x=267,
                 y=60
             )
 
-    first_socket_inventory_position: Coordinate = Coordinate(
+    first_socket_inventory_position = Coordinate(
         x=455,
         y=342
     )
-    sockets_gap: Coordinate = Coordinate(
+    sockets_gap = Coordinate(
         x=19,
         y=28
     )
-    activate_map_device_button: Coordinate = Coordinate(
+    activate_map_device_button = Coordinate(
         x=145,
         y=460
     )
 
 
-@static_dataclass
+@dataclass
 class Regions:
-    stash_region: Region = Region(
+    stash_region = Region(
         left=7,
         top=68,
         width=360,
         height=420
     )
-    map_device_sockets_region: Region = Region(
+    map_device_sockets_region = Region(
         left=114,
         top=377,
         width=176,
         height=439
     )
-    portals_region: Region = Region(
+    portals_region = Region(
         left=0,
         top=0,
         width=800,
