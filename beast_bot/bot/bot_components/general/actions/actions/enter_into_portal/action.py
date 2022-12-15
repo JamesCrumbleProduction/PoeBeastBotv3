@@ -22,6 +22,7 @@ class EnterIntoPortal(AbstractAction):
         '_permissions',
         '_hsv_portal_validator',
         '_share_data_validator',
+        '_tempalates_defiles_and_ho',
     )
 
     def __init__(self, bot_data_adapter: BotDataAdapter):
