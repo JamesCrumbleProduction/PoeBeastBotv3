@@ -61,6 +61,7 @@ class Settings(BaseSettings):
     # should be feeled when NOTIFY_BY_MESSAGE was enabled
     PARTY_LEADER_NICKNAME: str = ''
     INGAME_CHAR_NAME: str = ''  # using for chat command etc.
+    BOT_CUSTOM_IP: str | None = None
     IS_PARTY_MEMBER: bool = True
 
     NOTIFY_BY_SOUND: bool = False

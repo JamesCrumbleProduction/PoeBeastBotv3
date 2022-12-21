@@ -118,14 +118,17 @@ class Bot:
             if settings.IS_PARTY_MEMBER
             else MachineStatus.PAUSED
         )
+        register_params: dict[str, Any] = {
+            'vm_name': settings.VM_NAME,
+            'port': settings.BOT_SERVER.PORT,
+            'as_party_machine': settings.IS_PARTY_MEMBER
+        }
+        if settings.BOT_CUSTOM_IP is not None:
+            register_params['custom_ip'] = settings.BOT_CUSTOM_IP
         RequestsController.execute(
             Service.LINKING_SERVER,
             Routes.LinkingServer.Control.register_machine,
-            params={
-                'vm_name': settings.VM_NAME,
-                'port': settings.BOT_SERVER.PORT,
-                'as_party_machine': settings.IS_PARTY_MEMBER
-            }
+            params=register_params
         )
 
     def _in_actions_for_executing(self, action_label: str) -> bool:

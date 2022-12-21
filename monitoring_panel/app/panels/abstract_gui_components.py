@@ -166,11 +166,12 @@ class AbstractGui(ABC):
             vm_name: str,
             port: int,
             request: Request,
-            as_party_machine: bool = True
+            as_party_machine: bool = True,
+            custom_ip: str | None = None
         ) -> None:
             self.server_methods.call_to_add_selectable_machine(Machine(
                 name=vm_name,
-                host=request.client.host,
+                host=request.client.host if custom_ip is None else custom_ip,
                 port=port,
                 status=MachineStatus.PAUSED
             ), as_party_machine)
