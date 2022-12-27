@@ -53,15 +53,21 @@ class EnterIntoPortal(AbstractAction):
     #         for portal_coord in self._share_data_validator.iterate_by_each_founded_portal():
     #             yield portal_coord
 
-    def _portals_coordinates(self, **kwargs) -> Iterator[Coordinate]:
-        for portal_coord in self._tempalates_defiles_and_ho.iterate_all_by_first_founded():
-            if portal_coord is not None:
-                yield portal_coord
-
     def execute_action(self) -> Iterator[ControlAction]:
         yield from super().execute_action()
+        while True:
 
-        for portal_coord in self._portals_coordinates():
-            CommonIOController.move_and_click(portal_coord)
-            yield ControlAction.DONE
-            break
+            total_count: int = 0
+            none_count: int = 0
+
+            for portal_coord in self._tempalates_defiles_and_ho.iterate_all_by_first_founded():
+                if portal_coord is not None:
+                    CommonIOController.move_and_click(portal_coord)
+                else:
+                    none_count += 1
+
+                total_count += 1
+
+            if none_count >= total_count:
+                yield ControlAction.DONE
+                break
