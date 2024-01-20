@@ -50,6 +50,17 @@ class KingOfTheMistsFinding(AbstractAction):
     def permissions(self) -> set[MachineStatus]:
         return self._permissions
 
+    def _test_share_data_connector(self) -> None:
+        for _ in range(10):
+            self._share_data_connector.update_source()
+            if self._share_data_connector._share_data_content:
+                return
+            
+        err = RuntimeError("SHARE DATA DOES NOT WORKING !!!!!!!!!!!!!!!!!!!!!!!")
+        print(err)
+        time.sleep(10)
+        raise err
+
     def _init_stash_data(self) -> None:
         self._tabs_coordinates: dict[StashTab, TabMeta] = {
             StashTab.MAPS: TabMeta(*list(
