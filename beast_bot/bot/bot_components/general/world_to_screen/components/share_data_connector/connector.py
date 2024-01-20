@@ -61,7 +61,6 @@ class ShareDataConnector:
             if not isnan(portal_entity.on_screen_position.x):
                 yield portal_entity.screen_coordinate()
 
-    @source_auto_update
     def get_closest_portal(self) -> Coordinate | None:
         closest_portal_entity: Entity = None
 
@@ -75,3 +74,11 @@ class ShareDataConnector:
 
         if closest_portal_entity is not None:
             return closest_portal_entity.screen_coordinate()
+
+    @source_auto_update
+    def get_current_location(self) -> str | None:
+        return self._share_data_content.get('current_location')
+
+    @source_auto_update
+    def get_location_content(self) -> list[str] | None:
+        return self._share_data_content.get('location_content')

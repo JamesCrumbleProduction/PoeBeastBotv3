@@ -1,10 +1,10 @@
 orjson
 pynput
-pydantic
+pydantic==1.10.*
 httpx
 opencv-python
 Pillow
-fastapi
+fastapi==0.93.*
 uvicorn
 pyyaml
 pywin32

@@ -90,3 +90,9 @@ class Regions:
         width=800,
         height=510
     )
+    inventory_region: Region = Region(
+        left=437,
+        top=324,
+        width=793,
+        height=475
+    )

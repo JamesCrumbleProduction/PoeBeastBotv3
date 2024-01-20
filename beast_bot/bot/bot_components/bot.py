@@ -18,7 +18,7 @@ from ..server.components.from_hud.structure import LocationContent, CurrentLocat
 
 
 MAIN_ACTION_LABEL: str = (
-    'BeastsFindingAction'
+    'KingOfTheMistsFinding'
     if settings.IS_PARTY_MEMBER is False
     else 'PartyMembering'
 )
