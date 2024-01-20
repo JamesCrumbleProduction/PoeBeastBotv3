@@ -8,22 +8,6 @@ from .requests_controller import Routes, Service, RequestsController
 from ...services.logger import BOT_LOGGER
 
 
-def static_dataclass(static_dataclass):
-
-    def wrapper():
-        nonlocal static_dataclass
-
-        static_dataclass = dataclass(static_dataclass)
-
-        def __new__(cls, *args, **kwargs):
-            return cls
-
-        static_dataclass.__new__ = __new__
-
-        return static_dataclass
-    return wrapper()
-
-
 def wait_monitoring_server_connection() -> None:
     BOT_LOGGER.info('Trying to connect to the linking server...')
 

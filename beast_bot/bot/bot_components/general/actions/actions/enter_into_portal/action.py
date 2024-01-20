@@ -24,7 +24,7 @@ class EnterIntoPortal(AbstractAction):
 
     def __init__(self, bot_data_adapter: BotDataAdapter):
         super().__init__(bot_data_adapter)
-        self._hsv_portal_validator = HSVPortalScanner(Regions.portals_region)
+        self._hsv_portal_validator = HSVPortalScanner(Regions().portals_region)
         self._share_data_validator = ShareDataConnector()
         self._permissions = {
             MachineStatus.IDLE_MEMBER,

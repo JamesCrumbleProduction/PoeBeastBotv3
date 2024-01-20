@@ -80,14 +80,8 @@ class BeastsFindingAction(AbstractAction):
 
     def _init_stash_data(self) -> None:
         self._tabs_coordinates: dict[StashTab, TabMeta] = {
-            StashTab.MAPS: TabMeta(*list(
-                field.default
-                for field in fields(Coordinates.Stash.MapTabs)
-            )),
-            StashTab.SCARABS: TabMeta(*list(
-                field.default
-                for field in fields(Coordinates.Stash.ScarabTabs)
-            ))
+            StashTab.MAPS: TabMeta(*list(Coordinates().stash.map_tabs)),
+            StashTab.SCARABS: TabMeta(*list(Coordinates().Stash.ScarabTabs))
         }
         BOT_LOGGER.debug('"BeastsFindingAction": STASH DATA WAS INITED')
 
@@ -97,14 +91,14 @@ class BeastsFindingAction(AbstractAction):
 
     def _init_scanners(self) -> None:
 
-        self._hsv_portal_scanner = HSVPortalScanner(Regions.portals_region)
+        self._hsv_portal_scanner = HSVPortalScanner(Regions().portals_region)
         self._maps_scanner = TemplateScanner(
             iterable_templates=BEAST_BOT_COMPILED_TEMPLATES.maps_templates.templates,
-            region=Regions.stash_region, threshold=0.45
+            region=Regions().stash_region, threshold=0.45
         )
         self._scarabs_scanner = TemplateScanner(
             iterable_templates=BEAST_BOT_COMPILED_TEMPLATES.scarabs_templates.templates,
-            region=Regions.stash_region, threshold=0.6
+            region=Regions().stash_region, threshold=0.6
         )
         self._stash_scanner = TemplateScanner(
             BEAST_BOT_COMPILED_TEMPLATES.nametags_templates.get('stash'),
@@ -114,7 +108,7 @@ class BeastsFindingAction(AbstractAction):
         self._unloaded_stash_scanner = TemplateScanner(
             BEAST_BOT_COMPILED_TEMPLATES.other_templates.get(
                 'empty_inventory_socket'
-            ), region=Regions.stash_region, threshold=0.9
+            ), region=Regions().stash_region, threshold=0.9
         )
         self._map_device_scanner = TemplateScanner(
             BEAST_BOT_COMPILED_TEMPLATES.nametags_templates.get('map_device'),
@@ -141,7 +135,7 @@ class BeastsFindingAction(AbstractAction):
     def _init_controllers(self) -> None:
         self._stash_io_controller = ClipboardIOController()
         self._inventory_io_controller = IterateIOController(
-            Coordinates.first_socket_inventory_position
+            Coordinates().first_socket_inventory_position
         )
         BOT_LOGGER.debug('"BeastsFindingAction": CONTROLLERS WAS INITED')
 
@@ -242,17 +236,17 @@ class BeastsFindingAction(AbstractAction):
 
     def _scarab_in_device(self) -> bool:
         return self._scarabs_scanner(
-            as_custom_region=Regions.map_device_sockets_region
+            as_custom_region=Regions().map_device_sockets_region
         ).get_condition_by_one()
 
     def _move_content_into_device(self) -> None:
         self._inventory_io_controller.iterate_with_move_and_replace_action(
-            Coordinates.sockets_gap, IterateByAxis.X, switch_value=2, iterate_count=1
+            Coordinates().sockets_gap, IterateByAxis.X, switch_value=2, iterate_count=1
         )
 
     def _activate_map_device(self) -> None:
         CommonIOController.move_and_click(
-            Coordinates.activate_map_device_button
+            Coordinates().activate_map_device_button
         )
 
     def _enter_into_portal(self) -> None:
