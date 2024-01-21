@@ -17,7 +17,8 @@ class SleepController:
         if self._data_adapter.location.current_location is None:
             return False
 
-        return 'hideout' in self._data_adapter.location.current_location.lower()
+        # return 'hideout' in self._data_adapter.location.current_location.lower()
+        return False
 
     def _run_executable_action(self, action_meta: ActionMeta) -> None:
         if executable_action := ACTIONS.get(action_meta.action_label):

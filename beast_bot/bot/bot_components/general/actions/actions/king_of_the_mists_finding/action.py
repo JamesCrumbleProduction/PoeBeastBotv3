@@ -1,6 +1,5 @@
 import time
 
-from dataclasses import fields
 from pynput.keyboard import Key
 from typing import Iterator, Callable, Any
 
@@ -45,6 +44,7 @@ class KingOfTheMistsFinding(AbstractAction):
         self._init_scanners()
         self._init_controllers()
         self._init_connectors()
+        self._test_share_data_connector()
 
     @property
     def permissions(self) -> set[MachineStatus]:
@@ -54,9 +54,11 @@ class KingOfTheMistsFinding(AbstractAction):
         for _ in range(10):
             self._share_data_connector.update_source()
             if self._share_data_connector._share_data_content:
+                print(self._share_data_connector._share_data_content)
                 return
-            
-        err = RuntimeError("SHARE DATA DOES NOT WORKING !!!!!!!!!!!!!!!!!!!!!!!")
+
+        err = RuntimeError(
+            "SHARE DATA DOES NOT WORKING !!!!!!!!!!!!!!!!!!!!!!!")
         BOT_LOGGER.error(err)
         time.sleep(10)
         raise err
@@ -189,6 +191,11 @@ class KingOfTheMistsFinding(AbstractAction):
         if tab_meta is None:
             raise UnknownStashTab(f'Unknown "{tab}" value of "tab" argument')
 
+        already_existed_maps = list(self._inventory_scanner_maps.iterate_all_by_each_founded())  # noqa
+        if already_existed_maps:
+            self._inventory_maps = already_existed_maps
+            return True
+
         if tab_coordinate := tab_meta.tab:
             CommonIOController.move_and_click(tab_coordinate)
 
@@ -238,9 +245,11 @@ class KingOfTheMistsFinding(AbstractAction):
         CommonIOController.move_and_grab(self._inventory_maps.pop())
 
     def _activate_map_device(self) -> None:
-        CommonIOController.move_and_click(
-            Coordinates().activate_map_device_button
-        )
+        for _ in range(3):
+            CommonIOController.move_and_click(
+                Coordinates().activate_map_device_button
+            )
+            time.sleep(0.05)
 
     def _enter_into_portal(self) -> None:
 
@@ -276,8 +285,6 @@ class KingOfTheMistsFinding(AbstractAction):
         self, condition: Callable[[None], bool]
     ) -> None:
 
-        started_time = time.time()
-
         while True:
             if condition() is True:
                 if self.bot_data_adapter.status is MachineStatus.HUD_PROBLEM:
@@ -285,11 +292,6 @@ class KingOfTheMistsFinding(AbstractAction):
                         MachineStatus.WORKING
                     )
                 break
-
-            if self._is_hud_problem(started_time) is True and self.bot_data_adapter.status is MachineStatus.WORKING:
-                self.bot_data_adapter.update_status(
-                    MachineStatus.HUD_PROBLEM
-                )
 
             time.sleep(action_settings.WAIT_UNTIL_NOT_IN_LOCATION_INTEVAL)
 
@@ -315,12 +317,13 @@ class KingOfTheMistsFinding(AbstractAction):
     def execute_action(self, **action_kwargs: dict[str, Any]) -> Iterator[ControlAction]:
         yield ControlAction.ActionType
 
-        self._enter_to_stash()
         if not self._inventory_maps:
+            self._enter_to_stash()
+            time.sleep(0.1)
             if self._grab_content(StashTab.MAPS) is False:
                 yield ControlAction.EXIT
 
-        CommonIOController.press(Key.esc)
+            CommonIOController.press(Key.esc)
 
         self._enter_to_map_device()
         time.sleep(0.1)

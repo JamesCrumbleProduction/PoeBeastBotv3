@@ -1,7 +1,6 @@
 import time
 
 from enum import Enum
-from dataclasses import dataclass
 from httpx._exceptions import ConnectTimeout, ReadTimeout, ConnectError
 
 from .requests_controller import Routes, Service, RequestsController

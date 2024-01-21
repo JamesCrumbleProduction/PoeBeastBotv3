@@ -1,6 +1,5 @@
 import time
 
-from dataclasses import fields
 from pynput.keyboard import Key
 from typing import Iterator, Callable, Any
 

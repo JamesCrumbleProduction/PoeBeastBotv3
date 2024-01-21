@@ -46,8 +46,9 @@ class CommonIOController:
 
         CommonIOController.move(coordinate)
         time.sleep(settings.IO_SERVICE.CLICK_INTERVAL)
-
-        MOUSE.click(Button.left)
+        MOUSE.press(Button.left)
+        time.sleep(settings.IO_SERVICE.CLICK_INTERVAL)
+        MOUSE.release(Button.left)
         time.sleep(settings.IO_SERVICE.CLICK_INTERVAL)
 
     @staticmethod

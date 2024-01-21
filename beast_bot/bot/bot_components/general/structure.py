@@ -5,6 +5,8 @@ from pydantic import BaseModel
 from .world_to_screen import Coordinate, Region
 
 # That means, method gives control as iterator before executing main action of method
+
+
 class ControlAction(Enum):
     EXIT: str = 'EXIT'
     DONE: str = 'DONE'
@@ -16,6 +18,7 @@ class ActionMeta(BaseModel):
 
     action_label: str
     action_kwargs: dict[str, Any]
+
 
 class MapTabs(BaseModel):
     first_map_tab: Coordinate = Coordinate(
@@ -45,17 +48,22 @@ class MapTabs(BaseModel):
         yield self.third_map_tab
         yield self.fourth_map_tab
         yield self.fifth_map_tab
+
+
 class ScarabTabs(BaseModel):
     first_scarab_tab: Coordinate = Coordinate(
         x=267,
         y=60
     )
+
     def __iter__(self):
         yield self.first_scarab_tab
 
+
 class Stash(BaseModel):
     map_tabs: MapTabs = MapTabs()
-    scarab_tabs: scarab_tabs = ScarabTabs()
+    scarab_tabs: ScarabTabs = ScarabTabs()
+
 
 class Coordinates(BaseModel):
     stash: Stash = Stash()
@@ -72,7 +80,6 @@ class Coordinates(BaseModel):
         y=460
     )
 
-        
 
 class Regions(BaseModel):
     stash_region: Region = Region(
