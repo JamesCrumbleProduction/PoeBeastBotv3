@@ -81,7 +81,7 @@ class BeastsFindingAction(AbstractAction):
     def _init_stash_data(self) -> None:
         self._tabs_coordinates: dict[StashTab, TabMeta] = {
             StashTab.MAPS: TabMeta(*list(Coordinates().stash.map_tabs)),
-            StashTab.SCARABS: TabMeta(*list(Coordinates().Stash.ScarabTabs))
+            StashTab.SCARABS: TabMeta(*list(Coordinates().stash.scarab_tabs))
         }
         BOT_LOGGER.debug('"BeastsFindingAction": STASH DATA WAS INITED')
 
